@@ -329,7 +329,7 @@ function startTelemetry() {
     updateHud();
   }, 250);
 }
-const teleSummary = () => S.tele.frames < 8 ? { eye: null, brow: null } : { eye: Math.round(S.tele.eyeFrames / S.tele.frames * 100), brow: Math.round(S.tele.browFrames / Math.max(1, S.tele.faceFrames) * 100) };
+const teleSummary = () => H.faceSummary(S.tele);
 
 function updateHud() {
   const ta = $('#ans'); if (!ta) return;

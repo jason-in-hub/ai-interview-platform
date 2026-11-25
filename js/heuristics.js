@@ -82,6 +82,12 @@ export function presenceScore({ eye, brow, pace: p }, lang) {
 
 const clamp = (x, lo = 0, hi = 1) => Math.max(lo, Math.min(hi, x));
 
+// Frames without a face count against eye contact, but if a face was (almost) never seen, nothing was measured.
+export function faceSummary({ frames, faceFrames, eyeFrames, browFrames }) {
+  if (faceFrames < 8) return { eye: null, brow: null };
+  return { eye: Math.round(eyeFrames / frames * 100), brow: Math.round(browFrames / faceFrames * 100) };
+}
+
 // ---------- Rule-based probe ----------
 export function sentences(text) {
   return (text || '').split(/(?<=[。！？!?.;；\n])\s*/).map(s => s.trim()).filter(Boolean);

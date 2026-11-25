@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { ownership, star, pace, paceStatus, heuristicProbe, probeLimitOk, presenceScore, heuristicReport, decision, speechUnits } from '../js/heuristics.js';
+import { ownership, star, pace, paceStatus, heuristicProbe, probeLimitOk, presenceScore, heuristicReport, decision, speechUnits, faceSummary } from '../js/heuristics.js';
 import { buildProbePrompt, buildReportPrompt } from '../js/prompts.js';
 let n = 0; const t = (name, fn) => { fn(); n++; console.log('ok', name); };
 
@@ -30,5 +30,9 @@ t('prompts: verbatim template + rendered transcript', () => {
   assert.match(p.system, /senior hiring manager \(MD\)/); assert.match(p.user, /^\[CONTEXT\]/); assert.match(p.user, /"probe"/);
   const r = buildReportPrompt(ctx, [{ question: 'Q1', answer: 'A1', probe: 'P1', probeAnswer: 'PA1' }, { question: 'Q2', answer: 'A2' }], { eye: 70, brow: 10, pace: 200, presence: 20 });
   assert.match(r.user, /- Question 2: Q2/); assert.doesNotMatch(r.user, /\{q1_text\}|\{full_interview_transcript\}/); assert.match(r.user, /200 chars\/min/);
+});
+t('face telemetry: never seeing a face means unmeasured, not 0%', () => {
+  assert.deepEqual(faceSummary({ frames: 100, faceFrames: 0, eyeFrames: 0, browFrames: 0 }), { eye: null, brow: null });
+  assert.deepEqual(faceSummary({ frames: 100, faceFrames: 80, eyeFrames: 60, browFrames: 8 }), { eye: 60, brow: 10 });
 });
 console.log(n, 'tests passed');
