@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node test/heuristics.test.mjs",
+    "test": "node test/heuristics.test.mjs && node test/llm.test.mjs && node test/worker.test.mjs",
     "start": "python3 -m http.server 8000",
     "build:css": "npx -y tailwindcss@3 -c tailwind.config.js -i css/input.css -o css/app.css --minify"
   }
