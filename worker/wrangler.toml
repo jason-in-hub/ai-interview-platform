@@ -5,5 +5,5 @@ compatibility_date = "2026-11-01"
 [vars]
 # Comma-separated origins allowed to call the proxy (GitHub Pages origin has no path).
 ALLOWED_ORIGINS = "https://jason-in-hub.github.io,http://localhost:8000"
-DEEPSEEK_MODEL = "deepseek-chat"
+DEEPSEEK_MODEL = "deepseek-flash"
 # Secret (not in this file): wrangler secret put DEEPSEEK_API_KEY
