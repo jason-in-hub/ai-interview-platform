@@ -19,7 +19,9 @@ page.on('pageerror', e => errors.push('pageerror: ' + e.message));
 // MediaPipe logs its "INFO: Created TensorFlow Lite" banner via console.error; that one line is benign.
 page.on('console', m => { if (m.type() === 'error' && !/^INFO: Created TensorFlow Lite/.test(m.text())) errors.push('console: ' + m.text()); });
 await page.goto(base, { waitUntil: 'networkidle2' });
-await page.evaluate(() => localStorage.removeItem('aip.settings'));
+// Default run forces the offline engine (deterministic, free). AI=1 exercises the configured AI engine for real.
+const AI = !!process.env.AI;
+await page.evaluate(ai => ai ? localStorage.removeItem('aip.settings') : localStorage.setItem('aip.settings', JSON.stringify({ provider: 'offline' })), AI);
 await page.reload({ waitUntil: 'networkidle2' });
 await page.click(`[data-lang="${lang}"]`);
 await page.click('[data-ind="consulting"]');
@@ -52,7 +54,8 @@ for (let i = 0; i < 3; i++) {
   await page.type('#ans', answers[i][1]);
   await page.click('#submit');
 }
-await page.waitForSelector('[data-testid=decision]', { timeout: 20000 });
+await page.waitForSelector('[data-testid=decision]', { timeout: 90000 });
+const sources = await page.evaluate(() => ({ probes: window.__aip.qa.map(q => q.probeSource), report: window.__aip.report.source }));
 await checkOverflow('report');
 const out = await page.evaluate(() => ({
   decision: document.querySelector('[data-testid=decision]').textContent,
@@ -66,5 +69,6 @@ await page.click('#drill');
 await page.waitForSelector('[data-testid=question]');
 const drillQ = await page.$eval('[data-testid=question]', e => e.textContent);
 await browser.close();
-console.log(JSON.stringify({ device: device || 'desktop', checks, probes, ...out, drillQ, overflow, errors }, null, 2));
+console.log(JSON.stringify({ device: device || 'desktop', checks, probes, ...out, drillQ, sources, overflow, errors }, null, 2));
+if (AI && (sources.report !== 'llm' || sources.probes.some(s => s !== 'llm'))) { console.error('AI run fell back to the offline engine'); process.exit(1); }
 if (overflow.length || errors.length || out.qscores.length !== 3 || !out.replay) process.exit(1);

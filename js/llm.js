@@ -46,6 +46,7 @@ async function askDeepSeek({ system, user }, maxTokens) {
   const r = await fetch(PROXY_URL.replace(/\/$/, '') + '/chat', {
     method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ system, user, maxTokens }),
+    signal: AbortSignal.timeout?.(30000),   // a stalled call falls back to the offline engine
   });
   if (!r.ok) throw new Error('Proxy ' + r.status + ': ' + (await r.text()).slice(0, 200));
   return (await r.json()).text;

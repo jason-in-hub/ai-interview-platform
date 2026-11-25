@@ -450,6 +450,7 @@ function renderReport() {
       <div class="rounded-lg bg-red-50/60 p-4"><div class="text-xs text-red-700 font-medium">${t('before')}</div><p class="mt-1 text-slate-700">${esc(r.rewrite.before) || '—'}</p></div>
       <div class="rounded-lg bg-emerald-50/60 p-4"><div class="text-xs text-emerald-700 font-medium">${t('after')}</div><p class="mt-1 text-slate-700">${esc(r.rewrite.after)}</p></div>
     </div><p class="mt-3 text-sm text-slate-500">${esc(r.rewrite.note)}</p>
+    ${r.source === 'llm' ? `<p class="mt-2 text-xs text-amber-700" data-testid="ai-figures">${S.lang === 'zh' ? 'AI 改寫內的數字只作示範，使用前請換上你的真實數據。' : 'Figures in the AI rewrite are illustrative. Replace them with your real numbers.'}</p>` : ''}
   </section>
   <section class="mt-6 rounded-xl border border-slate-200/80 bg-white p-5"><h3 class="font-medium">${t('replay')}</h3>
     ${S.videoUrl ? `<video id="replay" src="${S.videoUrl}" controls class="mt-3 w-full max-w-xl rounded-lg bg-slate-900"></video>

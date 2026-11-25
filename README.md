@@ -43,5 +43,8 @@ Abuse guards: the Worker accepts requests only from the origins listed in `ALLOW
 python3 -m http.server 8000         # then open http://localhost:8000
 node test/heuristics.test.mjs       # heuristic engine and prompt rendering
 node test/worker.test.mjs           # proxy: origin block, key never leaks, caps, rate limit
-node test/e2e.mjs http://localhost:8000/ en   # full flow in headless Chrome (needs puppeteer-core)
+node test/e2e.mjs http://localhost:8000/ en   # full flow in headless Chrome (needs puppeteer-core), offline engine
+AI=1 node test/e2e.mjs http://localhost:8000/ en   # same flow on the real AI engine; fails if it falls back to offline
+node test/live-ai.mjs 3             # real DeepSeek calls: JSON validity, probe length, latency
+npm run build:css                   # rebuild css/app.css after changing Tailwind classes
 ```
