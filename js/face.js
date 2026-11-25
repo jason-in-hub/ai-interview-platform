@@ -7,10 +7,12 @@ export async function loadFace() {
   if (!loading) loading = (async () => {
     const { FaceLandmarker, FilesetResolver } = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${VER}/vision_bundle.mjs`);
     const fs = await FilesetResolver.forVisionTasks(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${VER}/wasm`);
-    landmarker = await FaceLandmarker.createFromOptions(fs, {
-      baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate: 'GPU' },
+    const opts = delegate => ({
+      baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate },
       runningMode: 'VIDEO', numFaces: 1, outputFaceBlendshapes: true,
     });
+    try { landmarker = await FaceLandmarker.createFromOptions(fs, opts('GPU')); }
+    catch { landmarker = await FaceLandmarker.createFromOptions(fs, opts('CPU')); }  // some mobile GPUs lack WebGL2 support
     return landmarker;
   })().catch(e => { console.warn('Face telemetry unavailable:', e); loading = null; return null; });
   return loading;

@@ -20,8 +20,8 @@ const S = {
 };
 
 const L = {
-  en: { brand: 'AI Interview Studio', start: 'Continue', industry: 'Industry track', lang: 'Interview language', ready: 'Presence & readiness check', lighting: 'Lighting', face: 'Face centred, eye level', mic: 'Microphone', practice: '10-second practice', practicePrompt: 'Introduce yourself in one sentence.', begin: 'Start interview', skipCam: 'Continue without camera', q: 'Question', of: 'of', submit: 'Submit answer', submitProbe: 'Submit follow-up answer', thinking: 'Interviewer is reviewing your answer…', mic_on: 'Stop mic', mic_off: 'Speak', typeHere: 'Speak or type your answer…', bench: 'Hiring manager benchmark', rubric: 'Rubric checklist', eye: 'Eye contact', brow: 'Brow tension', pace: 'Pace', own: 'Ownership: I vs we', analysing: 'Writing your diagnostic report…', decision: 'Hiring decision', percentile: 'Cohort percentile (simulated)', strengths: 'Strengths', improvements: 'Deficiencies', rewrite: 'Executive before / after', before: 'Before', after: 'After', replay: 'Replay', drill: 'Drill weakest question', restart: 'New session', perQ: 'Per-question score', settings: 'Settings', engineAI: 'Claude API', engineOff: 'Offline heuristic engine', cue: 'Insider cue', noSpeech: 'Speech recognition needs Chrome or Edge. Type your answers instead.' },
-  zh: { brand: 'AI 模擬面試室', start: '繼續', industry: '行業路線', lang: '面試語言', ready: '表現及準備檢查', lighting: '光線', face: '面部置中、視線平齊', mic: '咪高峰', practice: '10秒練習', practicePrompt: '用一句話介紹你自己。', begin: '開始面試', skipCam: '不使用鏡頭繼續', q: '問題', of: '/', submit: '提交答案', submitProbe: '提交追問回答', thinking: '面試官正在審視你的答案…', mic_on: '停止錄音', mic_off: '開始說話', typeHere: '說話或輸入你的答案…', bench: '招聘經理基準', rubric: '評分清單', eye: '眼神接觸', brow: '皺眉比率', pace: '語速', own: '個人貢獻：我 vs 我們', analysing: '正在生成診斷報告…', decision: '招聘決定', percentile: '同儕百分位（模擬）', strengths: '優勢', improvements: '不足', rewrite: '高管級改寫', before: '原句', after: '改寫', replay: '重播', drill: '重練最弱問題', restart: '重新開始', perQ: '各題分數', settings: '設定', engineAI: 'Claude API', engineOff: '離線規則引擎', cue: '面試官暗中測試', noSpeech: '語音辨識需使用 Chrome 或 Edge，請改為輸入文字。' },
+  en: { brand: 'AI Interview Studio', start: 'Continue', industry: 'Industry track', lang: 'Interview language', ready: 'Presence & readiness check', lighting: 'Lighting', face: 'Face centred, eye level', mic: 'Microphone', practice: '10-second practice', practicePrompt: 'Introduce yourself in one sentence.', begin: 'Start interview', skipCam: 'Continue without camera', q: 'Question', of: 'of', submit: 'Submit answer', submitProbe: 'Submit follow-up answer', thinking: 'Interviewer is reviewing your answer…', mic_on: 'Stop mic', mic_off: 'Speak', typeHere: 'Speak or type your answer…', bench: 'Hiring manager benchmark', rubric: 'Rubric checklist', eye: 'Eye contact', brow: 'Brow tension', pace: 'Pace', own: 'Ownership: I vs we', analysing: 'Writing your diagnostic report…', decision: 'Hiring decision', percentile: 'Cohort percentile (simulated)', strengths: 'Strengths', improvements: 'Deficiencies', rewrite: 'Executive before / after', before: 'Before', after: 'After', replay: 'Replay', drill: 'Drill weakest question', restart: 'New session', perQ: 'Per-question score', settings: 'Settings', engineAI: 'Claude API', engineOff: 'Offline heuristic engine', cue: 'Insider cue', noSpeech: 'Speech recognition is not available in this browser (use Chrome, Edge, Android Chrome or iOS Safari). Type your answers instead.' },
+  zh: { brand: 'AI 模擬面試室', start: '繼續', industry: '行業路線', lang: '面試語言', ready: '表現及準備檢查', lighting: '光線', face: '面部置中、視線平齊', mic: '咪高峰', practice: '10秒練習', practicePrompt: '用一句話介紹你自己。', begin: '開始面試', skipCam: '不使用鏡頭繼續', q: '問題', of: '/', submit: '提交答案', submitProbe: '提交追問回答', thinking: '面試官正在審視你的答案…', mic_on: '停止錄音', mic_off: '開始說話', typeHere: '說話或輸入你的答案…', bench: '招聘經理基準', rubric: '評分清單', eye: '眼神接觸', brow: '皺眉比率', pace: '語速', own: '個人貢獻：我 vs 我們', analysing: '正在生成診斷報告…', decision: '招聘決定', percentile: '同儕百分位（模擬）', strengths: '優勢', improvements: '不足', rewrite: '高管級改寫', before: '原句', after: '改寫', replay: '重播', drill: '重練最弱問題', restart: '重新開始', perQ: '各題分數', settings: '設定', engineAI: 'Claude API', engineOff: '離線規則引擎', cue: '面試官暗中測試', noSpeech: '此瀏覽器不支援語音辨識（請用 Chrome、Edge、Android Chrome 或 iOS Safari），請改為輸入文字。' },
 };
 const t = k => L[S.lang][k];
 const ctx = () => { const ind = INDUSTRIES[S.industry]; return { lang: S.lang, industry: ind.name[S.lang], role: ind.role[S.lang], interviewer_title: ind.title[S.lang] }; };
@@ -32,16 +32,16 @@ const aiOn = () => activeProvider(settings) !== 'offline';
 function shell(inner) {
   app.innerHTML = `
   <header class="border-b border-slate-200/80 bg-white/70 backdrop-blur">
-    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-      <div class="flex items-center gap-3"><div class="h-7 w-7 rounded-md bg-slate-900 text-white grid place-items-center text-xs font-semibold">AI</div><span class="font-semibold tracking-tight">${t('brand')}</span></div>
-      <div class="flex items-center gap-3 text-sm">
-        <span class="px-2 py-0.5 rounded-full border ${aiOn() ? 'border-emerald-300 text-emerald-700 bg-emerald-50' : 'border-slate-300 text-slate-600 bg-white'}" data-testid="engine">${engineLabel()}</span>
-        <button id="btn-settings" class="text-slate-600 hover:text-slate-900">${t('settings')}</button>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-3 min-w-0"><div class="shrink-0 h-7 w-7 rounded-md bg-slate-900 text-white grid place-items-center text-xs font-semibold">AI</div><span class="font-semibold tracking-tight truncate">${t('brand')}</span></div>
+      <div class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm shrink-0">
+        <span class="whitespace-nowrap px-2 py-0.5 rounded-full border ${aiOn() ? 'border-emerald-300 text-emerald-700 bg-emerald-50' : 'border-slate-300 text-slate-600 bg-white'}" data-testid="engine">${engineLabel()}</span>
+        <button id="btn-settings" class="whitespace-nowrap min-h-11 px-1 text-slate-600 hover:text-slate-900">${t('settings')}</button>
       </div>
     </div>
   </header>
-  <main class="max-w-6xl mx-auto px-6 py-10">${inner}</main>
-  <dialog id="dlg" class="rounded-xl p-0 w-full max-w-md backdrop:bg-slate-900/30">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">${inner}</main>
+  <dialog id="dlg" class="rounded-xl p-0 w-[calc(100%-2rem)] max-w-md backdrop:bg-slate-900/30">
     <form method="dialog" class="p-6 space-y-4">
       <h3 class="font-semibold">${t('settings')}</h3>
       <label class="block text-sm">AI engine
@@ -73,7 +73,7 @@ function renderPicker() {
   shell(`
   <section class="max-w-3xl">
     <p class="text-sm text-slate-500">Step 1 / 4</p>
-    <h1 class="text-3xl font-semibold tracking-tight mt-1">${S.lang === 'zh' ? '選擇行業與職位' : 'Choose your industry and role'}</h1>
+    <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-1">${S.lang === 'zh' ? '選擇行業與職位' : 'Choose your industry and role'}</h1>
     <p class="text-slate-600 mt-2">${S.lang === 'zh' ? '三條問題，每條之後面試官會即時追問。完成後獲得四大支柱診斷報告。' : 'Three questions, each followed by a live probe from the interviewer, then a four-pillar diagnostic report.'}</p>
     <div class="mt-8"><h2 class="text-sm font-medium text-slate-700">${t('lang')}</h2>
       <div class="mt-2 inline-flex rounded-lg border border-slate-200 bg-white p-1">
@@ -99,10 +99,12 @@ function renderPicker() {
 let audioCtx, analyser, rafId, sampleTimer;
 async function ensureMedia() {
   if (S.stream) return S.stream;
-  try { S.stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: true }); }
+  try { S.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: true }); }
   catch (e) { try { S.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { S.stream = null; } }
   if (S.stream?.getAudioTracks().length) {
-    audioCtx = new AudioContext();
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const unlock = () => audioCtx.state === 'suspended' && audioCtx.resume();
+    unlock(); document.addEventListener('pointerdown', unlock, { passive: true });
     analyser = audioCtx.createAnalyser(); analyser.fftSize = 1024;
     audioCtx.createMediaStreamSource(S.stream).connect(analyser);
   }
@@ -168,7 +170,7 @@ function renderReady() {
   shell(`
   <section>
     <p class="text-sm text-slate-500">Step 2 / 4</p>
-    <h1 class="text-3xl font-semibold tracking-tight mt-1">${t('ready')}</h1>
+    <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-1">${t('ready')}</h1>
     <div class="mt-8 grid md:grid-cols-2 gap-8">
       <div class="rounded-xl overflow-hidden border border-slate-200/80 bg-slate-900 aspect-video relative">
         <video id="vid" muted playsinline class="w-full h-full object-cover -scale-x-100"></video>
@@ -231,7 +233,7 @@ function startInterview(questions, drill = null) {
   S.speech = { text: '', secs: 0, curText: '', curSecs: 0 };
   S.chunks = []; if (S.videoUrl) URL.revokeObjectURL(S.videoUrl); S.videoUrl = null;
   if (S.stream && window.MediaRecorder) {
-    try { S.recorder = new MediaRecorder(S.stream); S.recorder.ondataavailable = e => e.data.size && S.chunks.push(e.data); S.recorder.start(1000); S.recStart = performance.now(); } catch { S.recorder = null; }
+    try { const mime = ['video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'].find(m => MediaRecorder.isTypeSupported?.(m)); S.recorder = new MediaRecorder(S.stream, mime ? { mimeType: mime } : undefined); S.recorder.ondataavailable = e => e.data.size && S.chunks.push(e.data); S.recorder.start(1000); S.recStart = performance.now(); } catch { S.recorder = null; }
   }
   S.screen = 'interview'; render();
 }
@@ -240,12 +242,12 @@ function renderInterview() {
   const ind = INDUSTRIES[S.industry], cur = S.qa[S.qIndex], probing = S.phase !== 'answer';
   shell(`
   <div class="flex items-center justify-between">
-    <p class="text-sm text-slate-500">Step 3 / 4 · ${t('q')} ${S.qIndex + 1} ${t('of')} ${S.qa.length}${S.drill != null ? ' · drill' : ''}</p>
-    <div class="flex gap-1">${S.qa.map((_, i) => `<span class="h-1.5 w-10 rounded-full ${i < S.qIndex ? 'bg-slate-900' : i === S.qIndex ? 'bg-slate-500' : 'bg-slate-200'}"></span>`).join('')}</div>
+    <p class="text-xs sm:text-sm text-slate-500">Step 3 / 4 · ${t('q')} ${S.qIndex + 1} ${t('of')} ${S.qa.length}${S.drill != null ? ' · drill' : ''}</p>
+    <div class="flex gap-1">${S.qa.map((_, i) => `<span class="h-1.5 w-6 sm:w-10 rounded-full ${i < S.qIndex ? 'bg-slate-900' : i === S.qIndex ? 'bg-slate-500' : 'bg-slate-200'}"></span>`).join('')}</div>
   </div>
-  <div class="mt-6 grid lg:grid-cols-5 gap-8">
-    <aside class="lg:col-span-2 space-y-4">
-      <div class="rounded-xl overflow-hidden border border-slate-200/80 bg-slate-900 aspect-video w-64 relative">
+  <div class="mt-6 grid lg:grid-cols-5 gap-6 lg:gap-8">
+    <aside class="order-2 lg:order-1 lg:col-span-2 space-y-4">
+      <div class="rounded-xl overflow-hidden border border-slate-200/80 bg-slate-900 aspect-video w-40 sm:w-64 relative">
         <video id="vid" muted playsinline class="w-full h-full object-cover -scale-x-100"></video>
         <span class="absolute top-2 left-2 flex items-center gap-1 text-[11px] text-white/90"><span class="h-2 w-2 rounded-full bg-red-500"></span>REC</span>
       </div>
@@ -263,7 +265,7 @@ function renderInterview() {
         <div><div class="text-slate-500">STAR</div><div class="mt-2 flex gap-2" id="h-star">${['S', 'T', 'A', 'R'].map(k => `<span data-k="${k}" class="h-8 w-8 grid place-items-center rounded-md border border-slate-200 text-slate-400 font-medium">${k}</span>`).join('')}</div></div>
       </div>
     </aside>
-    <section class="lg:col-span-3 space-y-5">
+    <section class="order-1 lg:order-2 lg:col-span-3 space-y-5">
       <div class="rounded-xl border border-slate-200/80 bg-white p-6">
         <div class="flex items-center gap-3">
           <div class="h-11 w-11 rounded-full bg-slate-800 text-white grid place-items-center font-semibold">${esc(ind.title.en.split(/[ ,]/).filter(Boolean).slice(0, 2).map(w => w[0]).join(''))}</div>
@@ -280,10 +282,16 @@ function renderInterview() {
       </div>
       ${probing && cur.answer ? `<div class="text-sm text-slate-500 rounded-lg bg-slate-100/60 p-3 max-h-24 overflow-auto">${esc(cur.answer)}</div>` : ''}
       <div class="rounded-xl border border-slate-200/80 bg-white p-4">
-        <textarea id="ans" rows="6" class="w-full resize-y outline-none text-[15px] leading-relaxed" placeholder="${t('typeHere')}" ${S.phase === 'thinking' ? 'disabled' : ''}></textarea>
+        <div class="lg:hidden flex flex-wrap items-center gap-x-3 gap-y-1 pb-3 mb-3 border-b border-slate-100 text-xs text-slate-600">
+          <span id="m-star" class="flex gap-1">${['S', 'T', 'A', 'R'].map(k => `<span data-k="${k}" class="h-6 w-6 grid place-items-center rounded border border-slate-200 text-slate-400 font-medium">${k}</span>`).join('')}</span>
+          <span id="m-pace" class="tabular-nums">${t('pace')}: —</span>
+          <span id="m-own" class="tabular-nums"></span>
+          <span id="m-eye" class="tabular-nums"></span>
+        </div>
+        <textarea id="ans" rows="6" class="w-full resize-y outline-none text-base leading-relaxed" placeholder="${t('typeHere')}" ${S.phase === 'thinking' ? 'disabled' : ''}></textarea>
         <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-          <button id="mic" class="px-3 py-1.5 rounded-md border border-slate-300 text-sm ${SR ? '' : 'opacity-40 cursor-not-allowed'}" ${SR ? '' : 'disabled title="' + t('noSpeech') + '"'}>🎙 ${t('mic_off')}</button>
-          <button id="submit" class="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm disabled:opacity-40" ${S.phase === 'thinking' ? 'disabled' : ''}>${S.phase === 'probe' ? t('submitProbe') : t('submit')}</button>
+          <button id="mic" class="min-h-11 px-3 py-2 rounded-md border border-slate-300 text-sm ${SR ? '' : 'opacity-40 cursor-not-allowed'}" ${SR ? '' : 'disabled title="' + t('noSpeech') + '"'}>🎙 ${t('mic_off')}</button>
+          <button id="submit" class="min-h-11 px-4 py-2 rounded-lg bg-slate-900 text-white text-sm disabled:opacity-40" ${S.phase === 'thinking' ? 'disabled' : ''}>${S.phase === 'probe' ? t('submitProbe') : t('submit')}</button>
         </div>
       </div>
       <details class="rounded-xl border border-slate-200/80 bg-white px-4 py-3 text-sm"><summary class="cursor-pointer text-slate-600">${t('bench')}</summary><p class="mt-2 text-slate-600">${esc(ind.benchmark[S.lang])}</p></details>
@@ -339,6 +347,15 @@ function updateHud() {
   $('#h-own').textContent = o.weShare == null ? '—' : `${S.lang === 'zh' ? '我' : 'I'} ${o.i} · ${S.lang === 'zh' ? '我們' : 'we'} ${o.we}` + (o.we >= 2 && o.weShare > 0.5 ? (S.lang === 'zh' ? ' — 講清楚你個人做了什麼' : ' — own your specific contribution') : '');
   const s = H.star(text, S.lang);
   app.querySelectorAll('#h-star [data-k]').forEach(el => { el.className = 'h-8 w-8 grid place-items-center rounded-md border font-medium ' + (s[el.dataset.k] ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 text-slate-400'); });
+  app.querySelectorAll('#m-star [data-k]').forEach(el => { el.className = 'h-6 w-6 grid place-items-center rounded border font-medium ' + (s[el.dataset.k] ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 text-slate-400'); });
+  const mp = $('#m-pace');
+  if (mp) {
+    mp.textContent = t('pace') + ': ' + (p == null ? '—' : p + ' ' + H.PACE_UNIT[S.lang]);
+    mp.className = 'tabular-nums ' + ({ ok: 'text-emerald-700', slow: 'text-amber-700', fast: 'text-red-600', idle: '' })[st];
+    $('#m-own').textContent = o.weShare == null ? '' : (S.lang === 'zh' ? '我 ' : 'I ') + o.i + ' · ' + (S.lang === 'zh' ? '我們 ' : 'we ') + o.we;
+    $('#m-own').className = 'tabular-nums ' + (o.we >= 2 && o.weShare > 0.5 ? 'text-amber-700 font-medium' : '');
+    $('#m-eye').textContent = ts.eye == null ? '' : t('eye') + ' ' + ts.eye + '%';
+  }
 }
 
 function commitSpeech() {
@@ -419,7 +436,7 @@ function renderReport() {
   </section>
   <section class="mt-6 rounded-xl border border-slate-200/80 bg-white p-5">
     <h3 class="font-medium">${t('perQ')}</h3>
-    <div class="mt-3 space-y-2" data-testid="qscores">${S.qa.map((q, i) => `<div class="flex items-center gap-3 text-sm"><span class="w-6 text-slate-500">Q${i + 1}</span><span class="flex-1 truncate text-slate-600">${esc(q.question)}</span><div class="w-40 h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 rounded-full ${i === weakest ? 'bg-amber-500' : 'bg-slate-900'}" style="width:${r.questionScores[i]}%"></div></div><span class="w-10 text-right tabular-nums">${r.questionScores[i]}</span></div>`).join('')}</div>
+    <div class="mt-3 space-y-2" data-testid="qscores">${S.qa.map((q, i) => `<div class="flex items-center gap-3 text-sm"><span class="w-6 text-slate-500">Q${i + 1}</span><span class="flex-1 min-w-0 truncate text-slate-600">${esc(q.question)}</span><div class="w-20 sm:w-40 shrink-0 h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 rounded-full ${i === weakest ? 'bg-amber-500' : 'bg-slate-900'}" style="width:${r.questionScores[i]}%"></div></div><span class="w-10 text-right tabular-nums">${r.questionScores[i]}</span></div>`).join('')}</div>
   </section>
   <section class="mt-6 grid md:grid-cols-2 gap-6">
     <div class="rounded-xl border border-slate-200/80 bg-white p-5"><h3 class="font-medium">${t('strengths')}</h3>
