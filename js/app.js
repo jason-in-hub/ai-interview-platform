@@ -2,7 +2,7 @@
 import { INDUSTRIES, RUBRIC } from './data.js';
 import * as H from './heuristics.js';
 import { llmProbe, llmReport, DEFAULT_MODEL, activeProvider, PROXY_URL } from './llm.js';
-import { loadFace, analyseFrame, brightness } from './face.js';
+import { loadFace, analyseFrame, brightness, faceStatus } from './face.js';
 
 const $ = sel => document.querySelector(sel);
 const app = $('#app');
@@ -108,7 +108,7 @@ async function ensureMedia() {
     analyser = audioCtx.createAnalyser(); analyser.fftSize = 1024;
     audioCtx.createMediaStreamSource(S.stream).connect(analyser);
   }
-  if (S.stream?.getVideoTracks().length) loadFace().then(f => { S.faceOn = !!f; });
+  if (S.stream?.getVideoTracks().length) loadFace();
   return S.stream;
 }
 function attachVideo(el) { if (el && S.stream?.getVideoTracks().length) { el.srcObject = S.stream; el.play().catch(() => {}); } }
@@ -178,7 +178,7 @@ function renderReady() {
         <div id="nocam" class="hidden absolute inset-0 grid place-items-center text-slate-300 text-sm">No camera</div>
       </div>
       <div class="space-y-3">
-        ${['lighting', 'face', 'mic'].map(k => `<div class="flex items-center justify-between rounded-lg border border-slate-200/80 bg-white px-4 py-3"><span>${t(k)}</span><span id="chk-${k}" class="text-sm text-slate-400">…</span></div>`).join('')}
+        ${['lighting', 'face', 'mic'].map(k => `<div class="rounded-lg border border-slate-200/80 bg-white px-4 py-3"><div class="flex items-center justify-between"><span>${t(k)}</span><span id="chk-${k}" class="text-sm text-slate-400">…</span></div>${k === 'face' ? `<div id="face-prog" class="mt-2"><div class="h-1.5 rounded-full bg-slate-100 overflow-hidden"><div id="face-bar" class="h-1.5 bg-slate-900 transition-all" style="width:0%"></div></div><p id="face-note" class="mt-1 text-xs text-slate-500"></p></div>` : ''}</div>`).join('')}
         <div class="rounded-lg border border-slate-200/80 bg-white px-4 py-3">
           <div class="flex items-center justify-between"><span>${t('practice')}</span><button id="practice" class="text-sm px-3 py-1 rounded-md border border-slate-300">▶ 10s</button></div>
           <p class="text-sm text-slate-500 mt-2">${t('practicePrompt')}</p>
@@ -203,8 +203,9 @@ function renderReady() {
         if (b != null) set('lighting', b >= 70 && b <= 210, b < 70 ? 'Too dark (' + b + ')' : b > 210 ? 'Too bright (' + b + ')' : 'OK (' + b + ')');
         const f = analyseFrame(vid);
         if (f) set('face', f.face && f.centered, !f.face ? 'No face' : f.centered ? 'OK' : 'Re-centre');
-        else set('face', false, S.faceOn ? '…' : 'Model loading / unavailable');
+        else set('face', false, faceStatus.state === 'failed' ? (S.lang === 'zh' ? '不可用' : 'Unavailable') : faceStatus.pct + '%');
       } else { set('lighting', false, 'n/a'); set('face', false, 'n/a'); }
+      renderFaceProgress();
       const lv = micLevel(); set('mic', lv > 0.02, analyser ? (lv > 0.02 ? 'Signal ✓' : 'Say something') : 'n/a');
     }, 400);
   });
@@ -333,7 +334,7 @@ const teleSummary = () => S.tele.frames < 8 ? { eye: null, brow: null } : { eye:
 function updateHud() {
   const ta = $('#ans'); if (!ta) return;
   const text = ta.value, ts = teleSummary();
-  $('#h-eye').textContent = ts.eye == null ? '—' : ts.eye + '%';
+  $('#h-eye').textContent = ts.eye != null ? ts.eye + '%' : faceStatus.state === 'loading' || faceStatus.state === 'init' ? (S.lang === 'zh' ? '載入 ' : 'loading ') + faceStatus.pct + '%' : '—';
   $('#h-brow').textContent = ts.brow == null ? '—' : ts.brow + '%';
   const secs = S.speech.curSecs + (rec ? (performance.now() - recT0) / 1000 : 0);
   const p = H.pace(S.speech.curText, secs, S.lang), st = H.paceStatus(p, S.lang), [lo, hi] = H.PACE_BAND[S.lang];
@@ -463,5 +464,21 @@ function renderReport() {
   $('#restart').onclick = () => { S.screen = 'picker'; render(); };
 }
 
+function renderFaceProgress() {
+  const bar = $('#face-bar'); if (!bar) return;
+  const st = faceStatus.state, zh = S.lang === 'zh';
+  bar.style.width = (st === 'ready' ? 100 : faceStatus.pct) + '%';
+  bar.className = 'h-1.5 transition-all ' + (st === 'failed' ? 'bg-amber-500' : st === 'ready' ? 'bg-emerald-600' : 'bg-slate-900');
+  $('#face-note').textContent = st === 'ready' ? (zh ? '面部分析已啟用' : 'Face analysis ready')
+    : st === 'failed' ? (zh ? '面部分析不可用，其他功能照常' : 'Face analysis unavailable; everything else works')
+    : st === 'init' ? (zh ? '正在初始化模型…' : 'Initialising model…')
+    : (zh ? `下載面部分析模型 ${faceStatus.mb.toFixed(1)} / ${faceStatus.totalMb.toFixed(1)} MB（可選，可直接開始面試）` : `Downloading face model ${faceStatus.mb.toFixed(1)} / ${faceStatus.totalMb.toFixed(1)} MB (optional — you can start now)`);
+  if (st === 'ready') setTimeout(() => $('#face-prog')?.classList.add('hidden'), 1500);
+}
+
 window.__aip = S;   // exposed for end-to-end tests
+window.__face = faceStatus;
 render();
+// Prefetch the face model while the user is on the picker, unless the browser asks to save data.
+const whenIdle = cb => window.requestIdleCallback ? window.requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 300);
+if (!navigator.connection?.saveData) whenIdle(() => loadFace());
